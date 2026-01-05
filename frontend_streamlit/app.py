@@ -249,6 +249,11 @@ else:
             </style>
             """, unsafe_allow_html=True)
         
+        # Data-Light Mode (2G Optimized)
+        st.session_state.low_data_mode = st.toggle("📉 Data-Light Mode (2G)", value=False)
+        if st.session_state.low_data_mode:
+             st.caption("✅ Images Hidden (Speed Boost)")
+        
         # Navigation Menu
         nav = st.radio("Menu", [
             "Mugappu (Home)", 
@@ -270,12 +275,16 @@ else:
             st.session_state.user = None
             st.rerun()
     
-    # Page Routing
-    pg = st.session_state.page
-    
-    if "Mugappu" in pg:
-        # --- HERO BANNER ---
-        st.image("banner.png", use_container_width=True)
+    # Page Routing with Global Error Handling
+    try:
+        pg = st.session_state.page
+        
+        if "Mugappu" in pg:
+            # --- HERO BANNER ---
+            if not st.session_state.low_data_mode:
+                st.image("banner.png", use_container_width=True)
+            else:
+                st.header("🌾 AgriAI: Smart Farming Assistant")
         
         st.title("Mugappu (Home)")
         
@@ -299,61 +308,69 @@ else:
         
         # Tile 1: Scanner (Digital Maruthuvar)
         with r1_c1:
-            st.image("scanner_tech.png", use_container_width=True)
+            if not st.session_state.low_data_mode:
+                st.image("scanner_tech.png", use_container_width=True)
             if st.button("📸 Digital Maruthuvar (Scanner)", use_container_width=True):
                 st.session_state.page = "Digital Maruthuvar (Scanner)"
                 st.rerun()
 
         # Tile 2: Market (Pasumai Sandhai)
         with r1_c2:
-            st.image("market_scene.png", use_container_width=True)
+            if not st.session_state.low_data_mode:
+                st.image("market_scene.png", use_container_width=True)
             if st.button("💰 Pasumai Sandhai (Market)", use_container_width=True):
                 st.session_state.page = "Pasumai Sandhai (Market)"
                 st.rerun()
                 
         # Tile 3: Advisor (Velaan-Thozhan)
         with r2_c1:
-            st.image("advisor_mascot.png", use_container_width=True)
+            if not st.session_state.low_data_mode:
+                st.image("advisor_mascot.png", use_container_width=True)
             if st.button("🤖 Velaan-Thozhan (Advisor)", use_container_width=True):
                 st.session_state.page = "Velaan-Thozhan (Advisor)"
                 st.rerun()
                 
         # Tile 4: Weather/Crowdsourcing
         with r2_c2:
-            st.image("https://images.unsplash.com/photo-1592210454359-9043f067919b", use_container_width=True) # Placeholder for Weather/General
+            if not st.session_state.low_data_mode:
+                st.image("https://images.unsplash.com/photo-1592210454359-9043f067919b", use_container_width=True)
             if st.button("🌧️ Weather & Schemes", use_container_width=True):
                  st.session_state.page = "Arasu Thittam (Schemes)"
                  st.rerun()
         
-    elif "Digital Maruthuvar" in pg:
-        scanner.show_scanner()
+        elif "Digital Maruthuvar" in pg:
+            scanner.show_scanner()
+    
+        elif "Schemes" in pg:
+            schemes.show_schemes()
+            
+        elif "Fertilizer" in pg:
+            fertilizer.show_fertilizer()
+    
+        elif "Videos" in pg:
+            videos.show_videos()
+            
+        elif "Community" in pg:
+            community.show_community()
+    
+        elif "Market" in pg:
+            market.show_market()
+            
+        elif "Advisor" in pg:
+            advisor.show_advisor()
+    
+        elif "Docs" in pg:
+            documents.show_documents()
+    
+        elif "Yield Forecast" in pg:
+            yield_map.show_yield_map()
+            
+        elif "Pricing" in pg:
+            pricing.show_pricing()
+            
+        elif "About" in pg:
+            about.show_about()
 
-    elif "Schemes" in pg:
-        schemes.show_schemes()
-        
-    elif "Fertilizer" in pg:
-        fertilizer.show_fertilizer()
-
-    elif "Videos" in pg:
-        videos.show_videos()
-        
-    elif "Community" in pg:
-        community.show_community()
-
-    elif "Market" in pg:
-        market.show_market()
-        
-    elif "Advisor" in pg:
-        advisor.show_advisor()
-
-    elif "Docs" in pg:
-        documents.show_documents()
-
-    elif "Yield Forecast" in pg:
-        yield_map.show_yield_map()
-        
-    elif "Pricing" in pg:
-        pricing.show_pricing()
-        
-    elif "About" in pg:
-        about.show_about()
+    except Exception as e:
+        st.error("மன்னிக்கவும், தொழில்நுட்ப கோளாறு (Sorry, Technical Error)")
+        st.error(f"Details: {str(e)}")

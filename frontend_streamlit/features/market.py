@@ -14,7 +14,8 @@ def get_market_data():
     return pd.DataFrame(data)
 
 def show_market():
-    st.image("market_scene.png", use_container_width=True)
+    if not st.session_state.get('low_data_mode', False):
+        st.image("market_scene.png", use_container_width=True)
     st.title("🚜 Pasumai Sandhai (Green Marketplace)")
     
     # Tabs for Market Features
