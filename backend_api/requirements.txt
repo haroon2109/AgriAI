@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+pydantic
+requests
+pandas
+# Future ML dependencies
+# torch
+# scikit-learn
+# geopandas
+# pystac-client

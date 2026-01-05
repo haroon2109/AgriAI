@@ -29,4 +29,4 @@ CREATE TABLE IF NOT EXISTS disease_risk (
 );
 
 -- Index for Spatial Queries
-CREATE INDEX idx_districts_geom ON districts USING GIST (geom);
+CREATE INDEX IF NOT EXISTS idx_districts_geom ON districts USING GIST (geom);

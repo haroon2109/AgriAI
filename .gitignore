@@ -1,0 +1,20 @@
+# Streamlit secrets
+.streamlit/secrets.toml
+
+# Database
+*.db
+agri_pro.db
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.env
+venv/
+.venv/
+env/
+
+# IDEs
+.vscode/
+.idea/

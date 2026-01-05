@@ -1,46 +1,50 @@
 version: '3.8'
 
 services:
-  db:
-    image: postgis/postgis:15-3.3-alpine
-    container_name: agriai_db
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: agriai
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./database/init_postgis.sql:/docker-entrypoint-initdb.d/init_postgis.sql
-    ports:
-      - "5432:5432"
-
-  api:
-    build:
-      context: .
-      dockerfile: api/Dockerfile
-    container_name: agriai_api
+  # 1. FastAPI Backend (Brain)
+  backend:
+    build: ./backend_api
+    container_name: agri_backend
     ports:
       - "8000:8000"
     volumes:
-      - ./api:/app/api
-      - ./models:/app/models
+      - ./backend_api:/app
     environment:
-      DATABASE_URL: postgresql://admin:password@db:5432/agriai
+      - DB_HOST=db
+      - DB_NAME=agri_pro
+      - DB_USER=postgres
+      - DB_PASS=password
     depends_on:
       - db
 
+  # 2. Streamlit Frontend (Face)
   frontend:
     build:
       context: .
       dockerfile: frontend_streamlit/Dockerfile
-    container_name: agriai_frontend
+    container_name: agri_frontend
     ports:
       - "8501:8501"
     volumes:
-      - ./frontend_streamlit:/app
+      - .:/app
+    environment:
+      - BACKEND_URL=http://backend:8000
     depends_on:
-      - api
-      - db
+      - backend
+
+  # 3. PostGIS Database (Memory)
+  db:
+    image: postgis/postgis:15-3.3
+    container_name: agri_db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=agri_pro
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init_postgis.sql:/docker-entrypoint-initdb.d/init_postgis.sql
 
 volumes:
   postgres_data:
