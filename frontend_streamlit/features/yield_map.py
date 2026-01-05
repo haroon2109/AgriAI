@@ -36,7 +36,6 @@ def show_yield_map():
     with c1:
         st.selectbox("Select Crop Layer", ["Paddy", "Maize", "Cotton"])
     with c2:
-    with c2:
         if st.button("🔄 Refresh Satellite Data (Live AI)"):
             backend_url = os.getenv("BACKEND_URL")
             if backend_url:
