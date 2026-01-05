@@ -6,6 +6,9 @@ AgriAI is a next-generation agricultural platform designed for Tamil Nadu. It bl
 
 ![AgriAI Banner](https://via.placeholder.com/1000x300?text=AgriAI+-+Technology+Meeting+Tradition)
 
+## 🌐 Live Demo
+👉 **[Click Here to Open AgriAI](https://agriai-frontend-57v0.onrender.com)**
+
 ## 🏗️ Architecture: Full-Stack
 
 The platform uses a modern containerized microservices architecture:
