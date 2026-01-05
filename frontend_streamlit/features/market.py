@@ -49,6 +49,18 @@ def show_market():
         
     with tab2:
         st.subheader("📊 Live Mandi Prices (சந்தை நிலவரம்)")
+        
+        # --- HIGH IMPACT DASH-CARDS ---
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.metric(label="தக்காளி (Tomato)", value="₹45", delta="2.50 ↑", delta_color="normal")
+        with col2:
+            st.metric(label="நெல் (Paddy)", value="₹2100", delta="-10.00 ↓", delta_color="inverse")
+        with col3:
+            st.metric(label="மஞ்சள் (Turmeric)", value="₹8500", delta="0.00", delta_color="off")
+
+        st.markdown("---")
         st.caption("Source: Agmarknet (Simulated Data for Tamil Nadu)")
         
         # Mock Agmarknet Data integration

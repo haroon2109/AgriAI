@@ -1,7 +1,7 @@
 [theme]
 base="light"
-primaryColor="#2E7D32"
-backgroundColor="#F1F8E9"
-secondaryBackgroundColor="#DCEDC8"
-textColor="#000000"
+primaryColor="#BF360C" # Terracotta Red
+backgroundColor="#FAFAFA"
+secondaryBackgroundColor="#E8F5E9" # Light Pacha Green
+textColor="#2E7D32" # Paddy Green
 font="sans serif"

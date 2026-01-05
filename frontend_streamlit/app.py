@@ -8,114 +8,91 @@ import auth
 import voice_engine
 
 # --- Config & Setup ---
-st.set_page_config(page_title="AgriAI Pro", layout="wide", page_icon="🌾")
+st.set_page_config(page_title="AgriAI", layout="wide", page_icon="🌾")
 
 # Initialize DB
 auth.init_db()
 
-# --- HIGH CONTRAST CSS (User Critical Request) ---
+# --- TAMIL HERITAGE THEME (Mannum Marabum) ---
 st.markdown("""
 <style>
-    /* Import Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Arima+Madurai:wght@300;400;700&family=Noto+Sans+Tamil:wght@300;400;700&display=swap');
+    /* Import Tamil Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Arima+Madurai:wght@700&family=Noto+Sans+Tamil:wght@400;700&display=swap');
 
-    /* 1. Global Background */
-    .stApp { 
-        background-color: #F1F8E9; /* Light Pacha Green */
+    /* Global Background and Text */
+    .stApp {
+        background-color: #FAFAFA;
         font-family: 'Noto Sans Tamil', sans-serif;
     }
-    
-    /* Sidebar Background */
-    section[data-testid="stSidebar"] {
-        background-color: #DCEDC8; /* Slightly Darker Green */
+
+    /* Header Styling */
+    h1, h2, h3 {
+        font-family: 'Arima Madurai', cursive !important;
+        color: #2E7D32 !important; /* Paddy Green */
     }
 
-    /* 2. Typography - High Contrast */
-    h1, h2, h3, h4, h5 { color: #2D4628 !important; font-family: 'Arima Madurai', cursive; }
-    p, label, div, span { color: #1A1A1A !important; } /* Ebony Black for text */
-    
-    /* 3. Input Fields & Selectboxes - CRITICAL VISIBILITY FIX */
-    .stTextInput>div>div>input, .stSelectbox>div>div>div, div[data-baseweb="select"] > div {
-        background-color: #FFFFFF !important; /* Pure White Bg */
-        color: #1A1A1A !important;           /* Dark Ebony Text */
-        caret-color: #BF360C !important;      /* Terracotta Cursor */
-        border: 2px solid #D1D5DB !important; /* Light Grey Border */
-        border-radius: 8px;
-        font-weight: 500;
-    }
-    
-    /* Force dropdown menu options to be visible */
-    ul[data-testid="stSelectboxVirtualDropdown"] li {
-        background-color: #FFFFFF !important;
-        color: #1A1A1A !important;
-    }
-
-    /* 4. Labels */
-    .stTextInput label, .stSelectbox label {
-        color: #2D4628 !important; /* Forest Green Labels */
-        font-weight: 700 !important;
-        font-size: 16px !important;
-    }
-
-    /* 5. Buttons (All Types) - White & Green */
-    .stButton>button, .stFormSubmitButton>button {
-        background-color: #FFFFFF !important;
-        color: #2D4628 !important;
-        border: 2px solid #2D4628 !important;
-        border-radius: 8px;
+    /* Primary Buttons */
+    .stButton>button {
+        background-color: #BF360C !important; /* Terracotta Red */
+        color: white !important;
+        border-radius: 20px;
+        border: none;
+        padding: 10px 24px;
         font-weight: bold;
     }
-    .stButton>button:hover, .stFormSubmitButton>button:hover {
-        background-color: #2D4628 !important;
-        color: #FFFFFF !important;
-        border-color: #2D4628 !important;
+    
+    .stButton>button:hover {
+        background-color: #FFC107 !important; /* Turmeric Gold */
+        color: #2E7D32 !important;
     }
 
-    /* 6. Tabs styling */
-    .stTabs [data-baseweb="tab-list"] { gap: 10px; }
+    /* Outline Button fix for Forms */
+    .stFormSubmitButton>button {
+        background-color: #BF360C !important;
+        color: white !important;
+        border: none !important;
+    }
+
+    /* Sidebar Styling */
+    [data-testid="stSidebar"] {
+        background-color: #E8F5E9; /* Light Pacha Green */
+    }
+    
+    /* Input Fields */
+    .stTextInput>div>div>input, .stSelectbox>div>div>div {
+        background-color: #FFFFFF !important;
+        color: #1A1A1A !important;
+        border: 2px solid #E0E0E0 !important;
+        border-radius: 10px;
+    }
+    
+    /* Tabs */
+    .stTabs [data-baseweb="tab-list"] { gap: 8px; }
     .stTabs [data-baseweb="tab"] {
-        height: 50px; white-space: pre-wrap;
-        background-color: #FFFFFF; border-radius: 5px;
-        color: #2D4628;
+        background-color: #FFFFFF;
+        border-radius: 15px 15px 0 0;
+        color: #2E7D32;
+        font-weight: bold;
     }
     .stTabs [aria-selected="true"] {
-        background-color: #E8F5E9; border-bottom: 2px solid #2D4628;
+        background-color: #E8F5E9;
+        border-bottom: 3px solid #BF360C;
     }
 
-    /* 7. Sidebar Toggle Button Fix */
-    button[kind="header"], [data-testid="collapsedControl"] {
-        background-color: #DCEDC8 !important; /* Light Green */
-        color: #2D4628 !important; /* Dark Green Icon */
-        border: 1px solid #2D4628 !important;
-        border-radius: 8px;
+    /* Custom Card Style (Use with st.markdown) */
+    .agri-card {
+        background-color: white;
+        padding: 20px;
+        border-radius: 15px;
+        border-left: 5px solid #FFC107;
+        box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
     }
     
-    /* 8. AGGRESSIVE LIGHT MODE FORCE */
-    /* Ensure no dark backgrounds persist */
-    .stApp, div[data-testid="stDecoration"], div[data-testid="stToolbar"], div[data-testid="stHeader"] {
-        background-color: #F1F8E9 !important;
-    }
-    
-    /* Force Text Color Black */
-    body, p, div, span, h1, h2, h3, h4, h5, h6, label, li, a {
-        color: #000000 !important;
-    }
-    
-    /* Fix Input Fields appearing dark */
-    input, textarea, select {
-        background-color: #FFFFFF !important;
-        color: #000000 !important;
-    }
-    
-    /* Fix SVGs turning white in dark mode */
-    svg {
-        fill: #000000 !important;
-        stroke: #000000 !important;
-    }
-    
-    /* Specific overrides for Streamlit Containers */
-    div[data-testid="stSidebar"] {
-        background-color: #DCEDC8 !important;
+    /* Loading Spinner Text */
+    div[data-testid="stStatusWidget"] label {
+        color: #BF360C !important;
+        font-weight: bold;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -133,7 +110,7 @@ def auth_card():
     with c2:
         st.markdown(f"""
         <div style="text-align:center; padding:20px; border:2px solid #2D4628; border-radius:15px; background:white; margin-bottom:20px;">
-            <h1 style="margin:0;">🌾 AgriAI Pro</h1>
+            <h1 style="margin:0;">🌾 AgriAI</h1>
             <p>Mannum Marabum Edition</p>
         </div>
         """, unsafe_allow_html=True)
@@ -191,7 +168,7 @@ def auth_card():
                     phone_assoc = auth.check_email_exists(email_input)
                     if phone_assoc:
                         # Send Email
-                        otp = auth.send_otp_email(email_input)
+                        otp, err = auth.send_otp_email(email_input)
                         if otp:
                             st.session_state.otp_generated = otp
                             st.session_state.reset_phone = phone_assoc
@@ -199,7 +176,7 @@ def auth_card():
                             st.success(f"OTP sent to {email_input}")
                             st.rerun()
                         else:
-                            st.error("Failed to send email. Check API Password.")
+                            st.error(f"Failed to send email: {err}")
                     else:
                         st.error("Email not found!")
             

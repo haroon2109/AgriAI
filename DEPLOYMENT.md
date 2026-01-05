@@ -1,4 +1,4 @@
-# 🚀 AgriAI Pro Deployment Guide
+# 🚀 AgriAI Deployment Guide
 
 This guide covers how to run AgriAI locally for development and how to deploy it to the cloud (Render.com).
 
@@ -48,10 +48,10 @@ Ensure your code is pushed to a GitHub repository.
 ### Step 2: Deploy Backend API
 1.  Create a **New Web Service** on Render.
 2.  Connect your GitHub repo.
-3.  **Root Directory**: `backend_api`
+3.  **Root Directory**: leave blank (Default)
 4.  **Runtime**: Python 3
 5.  **Build Command**: `pip install -r requirements.txt`
-6.  **Start Command**: `uvicorn main:app --host 0.0.0.0 --port 10000`
+6.  **Start Command**: `uvicorn backend_api.main:app --host 0.0.0.0 --port 10000`
 7.  Click **Create Web Service**. Copy the URL (e.g., `https://agri-backend.onrender.com`).
 
 ### Step 3: Deploy Frontend Dashboard

@@ -34,7 +34,20 @@ def show_advisor():
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    # Handle Input (Button or Text)
+    # --- VOICE FIRST INPUT ---
+    from streamlit_mic_recorder import mic_recorder
+    
+    c_voice, c_text = st.columns([1, 4])
+    with c_voice:
+        st.write("Speaking? (பேசவா?)")
+        audio = mic_recorder(start_prompt="🎤 Start", stop_prompt="⏹️ Stop", key='recorder')
+    
+    # Check for Voice Input first
+    if audio:
+        st.audio(audio['bytes'])
+        query = "Voice input received (Mock: 'What is the price of tomato?')" # Mock translation since no backend STT yet
+        
+    # Handle Input (Button or Text or Voice)
     if query:
         # User Message
         st.session_state.messages.append({"role": "user", "content": query})
@@ -51,20 +64,20 @@ def show_advisor():
             
             if "pest" in query or "Disease" in query:
                 full_response = "படம் எடுத்து 'Digital Maruthuvar' பகுதியில் பதிவேற்றவும். (Please upload a photo in the Disease Scanner section.)"
-            elif "price" in query or "Price" in query:
+            elif "price" in query or "Price" in query or "tomato" in query.lower():
                 full_response = "Madurai Mandi: Tomato is ₹45/kg today."
             elif "subsidy" in query or "Aid" in query:
                 full_response = "Check 'Arasu Thittam' tab for eligibility."
             elif "rain" in query or "Weather" in query:
                 full_response = "No rain expected for 3 days."
             else:
-                full_response = "I am listening. Tell me more."
+                full_response = "I heard you. I am just a demo for now, but soon I will speak back!"
             
             message_placeholder.markdown(full_response)
             st.session_state.messages.append({"role": "assistant", "content": full_response})
 
-    # Manual Input
-    prompt = st.chat_input("Type or speak to Arivu Ayya...")
+    # Manual Input (Fallback)
+    prompt = st.chat_input("Type to Arivu Ayya...")
     if prompt:
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):

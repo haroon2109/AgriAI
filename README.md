@@ -1,10 +1,10 @@
-# 🌾 AgriAI Pro: The Intelligent Farming Companion
+# 🌾 AgriAI: The Intelligent Farming Companion
 
 **"Mannum Marabum" (Soil & Tradition) Edition**
 
-AgriAI Pro is a next-generation agricultural platform designed for Tamil Nadu. It blends cutting-edge AI (Satellite monitoring, Disease Detection) with deep cultural wisdom (Crop Calendars, Traditional Knowledge).
+AgriAI is a next-generation agricultural platform designed for Tamil Nadu. It blends cutting-edge AI (Satellite monitoring, Disease Detection) with deep cultural wisdom (Crop Calendars, Traditional Knowledge).
 
-![AgriAI Banner](https://via.placeholder.com/1000x300?text=AgriAI+Pro+-+Technology+Meeting+Tradition)
+![AgriAI Banner](https://via.placeholder.com/1000x300?text=AgriAI+-+Technology+Meeting+Tradition)
 
 ## 🏗️ Architecture: Full-Stack
 

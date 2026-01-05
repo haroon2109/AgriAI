@@ -86,13 +86,14 @@ import random
 def send_otp_email(to_email):
     """
     Sends a 4-digit OTP to the user's email.
-    Returns the OTP (str) if successful, None otherwise.
+    Returns (OTP, None) if successful, (None, error_msg) otherwise.
     """
     otp = str(random.randint(1000, 9999))
     
     try:
         email_user = st.secrets["email"]["email_user"]
-        email_pass = st.secrets["email"]["email_password"]
+        # Strip spaces from app password just in case
+        email_pass = st.secrets["email"]["email_password"].replace(" ", "")
         
         msg = EmailMessage()
         msg.set_content(f"🌾 AgriAI Password Reset\n\nYour OTP is: {otp}\n\nplease do not share this code.")
@@ -100,15 +101,15 @@ def send_otp_email(to_email):
         msg['From'] = email_user
         msg['To'] = to_email
         
-        # Gmail SMTP
+        # Gmail SMTP - using SMTP_SSL for port 465
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
             smtp.login(email_user, email_pass)
             smtp.send_message(msg)
             
-        return otp
+        return otp, None
     except Exception as e:
         print(f"Email Error: {e}")
-        return None
+        return None, str(e)
 
 def update_password(phone, new_password):
     """Updates the password for a given phone number."""

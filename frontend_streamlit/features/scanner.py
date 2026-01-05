@@ -49,18 +49,26 @@ def show_scanner():
         st.markdown("### 📸 Capture (படம் பிடி)")
         st.info("💡 **Tip:** இலையின் பாதிக்கப்பட்ட பகுதியைத் தெளிவாகக் காட்டவும்.")
         
-        # File Uploader with 'Camera' feel
-        uploaded_file = st.file_uploader("Upload or Take Photo", type=['jpg', 'png', 'jpeg'], label_visibility="collapsed")
+        # --- CAMERA INPUT ---
+        st.write("Click 'Take Photo' below (கீழே உள்ள கேமராவை அழுத்தவும்)")
+        cam_file = st.camera_input("Scanner Active")
         
-        if not uploaded_file:
+        # Fallback Uploader
+        st.markdown("---")
+        st.caption("Or upload from gallery (அல்லது கேலரியில் இருந்து பதிவேற்றவும்)")
+        uploaded_file = st.file_uploader("Upload Image", type=['jpg', 'png', 'jpeg'], label_visibility="collapsed")
+        
+        final_file = cam_file if cam_file else uploaded_file
+
+        if not final_file:
             st.markdown("""
-            <div style="text-align:center; padding:20px;">
-                <div class="camera-btn">📷</div>
-                <p style="margin-top:10px; font-weight:bold;">பயிரைப் படம் பிடியுங்கள்</p>
+            <div style="text-align:center; padding:20px; border:2px dashed #ddd; border-radius:10px;">
+                <h3 style="color:#aaa;">Waiting for Leaf...</h3>
+                <p style="color:#888;">பயிரைப் படம் பிடிக்கவும்</p>
             </div>
             """, unsafe_allow_html=True)
         else:
-            st.image(uploaded_file, caption="Uploaded Image", use_column_width=True)
+            st.image(final_file, caption="Analyzing...", use_column_width=True)
             
             # Scanning Animation
             with st.spinner("🕵️ ஆராய்ந்து கொண்டிருக்கிறோம்... (Scanning...)"):
