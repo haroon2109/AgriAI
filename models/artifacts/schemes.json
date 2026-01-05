@@ -1,0 +1,26 @@
+[
+    {
+        "name": "PM-Kisan Samman Nidhi",
+        "keywords": ["income", "support", "cash", "6000", "pm kisan"],
+        "description": "Financial benefit of Rs. 6000/- per year in three equal installments to all landholding farmers.",
+        "link": "https://pmkisan.gov.in/"
+    },
+    {
+        "name": "Pradhan Mantri Fasal Bima Yojana (PMFBY)",
+        "keywords": ["insurance", "crop failure", "loss", "calamity", "bima"],
+        "description": "Crop insurance scheme supporting sustainable production in agriculture sector.",
+        "link": "https://pmfby.gov.in/"
+    },
+    {
+        "name": "Kisan Credit Card (KCC)",
+        "keywords": ["loan", "credit", "bank", "card", "finance"],
+        "description": "Timely and adequate credit to farmers to meet their cultivation needs.",
+        "link": "https://www.myscheme.gov.in/schemes/kcc"
+    },
+    {
+        "name": "Soil Health Card",
+        "keywords": ["soil", "test", "nutrient", "fertilizer", "health check"],
+        "description": "Government provides Soil Health Cards to farmers with crop-wise nutrient recommendations.",
+        "link": "https://soilhealth.dac.gov.in/"
+    }
+]

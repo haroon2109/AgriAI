@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgis/postgis:15-3.3-alpine
+    container_name: agriai_db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: agriai
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init_postgis.sql:/docker-entrypoint-initdb.d/init_postgis.sql
+    ports:
+      - "5432:5432"
+
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    container_name: agriai_api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/app/api
+      - ./models:/app/models
+    environment:
+      DATABASE_URL: postgresql://admin:password@db:5432/agriai
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend_streamlit/Dockerfile
+    container_name: agriai_frontend
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./frontend_streamlit:/app
+    depends_on:
+      - api
+      - db
+
+volumes:
+  postgres_data:
