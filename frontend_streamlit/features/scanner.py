@@ -1,7 +1,16 @@
 import streamlit as st
 import time
 
+import time
+
+@st.cache_resource
+def load_diagnostic_model():
+    # Simulate heavy model loading (MobileNetV2 / YOLO)
+    time.sleep(1) # Fake delay
+    return "Model_Loaded_v1.0"
+
 def show_scanner():
+    model = load_diagnostic_model()
     st.markdown("""
     <style>
         /* Camera Button Styling */

@@ -1,4 +1,17 @@
 import streamlit as st
+import pandas as pd
+
+@st.cache_data
+def get_market_data():
+    # Simulated Live Data from Agmarknet
+    data = {
+        "Commodity (பயிர்)": ["Paddy (நெல்)", "Tomato (தக்காளி)", "Cotton (பருத்தி)", "Turmeric (மஞ்சள்)", "Coconut (தேங்காய்)", "Banana (வாழை)"],
+        "Market (சந்தை)": ["Madurai", "Dindigul", "Theni", "Erode", "Pollachi", "Trichy"],
+        "Min Price (₹)": [1200, 1500, 4500, 6000, 25, 300],
+        "Max Price (₹)": [1800, 2200, 5200, 7500, 35, 500],
+        "Trend (போக்கு)": ["⬆️ High", "⬇️ Low", "➖ Stable", "⬆️ High", "➖ Stable", "⬆️ High"]
+    }
+    return pd.DataFrame(data)
 
 def show_market():
     st.image("market_scene.png", use_container_width=True)

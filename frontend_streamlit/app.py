@@ -290,48 +290,39 @@ else:
         st.divider()
         
         # --- QUICK ACCESS LAUNCHPAD (துரித சேவை) ---
-        st.subheader("Quick Access (துரித சேவை)")
+        st.subheader("📲 Quick Access (துரித சேவை)")
         
-        col1, col2, col3 = st.columns(3)
+        # Grid Layout (2x2 for Big Buttons)
+        r1_c1, r1_c2 = st.columns(2)
+        r2_c1, r2_c2 = st.columns(2)
         
-        with col1:
-            st.markdown("<div style='text-align:center; font-size:40px;'>🌿</div>", unsafe_allow_html=True)
-            if st.button("Digital Maruthuvar", key="btn_scan"):
+        # Tile 1: Scanner (Digital Maruthuvar)
+        with r1_c1:
+            st.image("scanner_tech.png", use_container_width=True)
+            if st.button("📸 Digital Maruthuvar (Scanner)", use_container_width=True):
                 st.session_state.page = "Digital Maruthuvar (Scanner)"
                 st.rerun()
 
-        with col2:
-            st.markdown("<div style='text-align:center; font-size:40px;'>💰</div>", unsafe_allow_html=True)
-            if st.button("Pasumai Sandhai", key="btn_market"):
+        # Tile 2: Market (Pasumai Sandhai)
+        with r1_c2:
+            st.image("market_scene.png", use_container_width=True)
+            if st.button("💰 Pasumai Sandhai (Market)", use_container_width=True):
                 st.session_state.page = "Pasumai Sandhai (Market)"
                 st.rerun()
                 
-        with col3:
-            st.markdown("<div style='text-align:center; font-size:40px;'>🤖</div>", unsafe_allow_html=True)
-            if st.button("Velaan-Thozhan", key="btn_advisor"):
+        # Tile 3: Advisor (Velaan-Thozhan)
+        with r2_c1:
+            st.image("advisor_mascot.png", use_container_width=True)
+            if st.button("🤖 Velaan-Thozhan (Advisor)", use_container_width=True):
                 st.session_state.page = "Velaan-Thozhan (Advisor)"
                 st.rerun()
                 
-        st.write("")
-        col4, col5, col6 = st.columns(3)
-        
-        with col4:
-            st.markdown("<div style='text-align:center; font-size:40px;'>🧪</div>", unsafe_allow_html=True)
-            if st.button("Ura-Kanakku", key="btn_fert"):
-                st.session_state.page = "Ura-Kanakku (Fertilizer)"
-                st.rerun()
-        
-        with col5:
-            st.markdown("<div style='text-align:center; font-size:40px;'>🏛️</div>", unsafe_allow_html=True)
-            if st.button("Arasu Thittam", key="btn_scheme"):
-                st.session_state.page = "Arasu Thittam (Schemes)"
-                st.rerun()
-                
-        with col6:
-            st.markdown("<div style='text-align:center; font-size:40px;'>🗂️</div>", unsafe_allow_html=True)
-            if st.button("Digital Pattayam", key="btn_docs"):
-                st.session_state.page = "Digital Pattayam (Docs)"
-                st.rerun()
+        # Tile 4: Weather/Crowdsourcing
+        with r2_c2:
+            st.image("https://images.unsplash.com/photo-1592210454359-9043f067919b", use_container_width=True) # Placeholder for Weather/General
+            if st.button("🌧️ Weather & Schemes", use_container_width=True):
+                 st.session_state.page = "Arasu Thittam (Schemes)"
+                 st.rerun()
         
     elif "Digital Maruthuvar" in pg:
         scanner.show_scanner()
