@@ -1,22 +1,46 @@
-import streamlit as st
+import time
 
-def speak_js(text, lang='ta-IN'):
+class VoiceEngine:
     """
-    Generates JavaScript to speak text using the browser's Web Speech API.
-    This works by injecting a hidden iframe or div that executes the JS.
+    The 'Tamil Voice' API (Mental Model)
+    Flow: Audio -> Whisper (STT) -> LLM (Intent) -> Action
     """
-    js = f"""
-        <script>
-            var msg = new SpeechSynthesisUtterance("{text}");
-            msg.lang = "{lang}";
-            window.speechSynthesis.speak(msg);
-        </script>
-    """
-    st.components.v1.html(js, height=0, width=0)
+    
+    def __init__(self):
+        self.supported_languages = ["ta-IN", "en-US"]
+        
+    def transcribe(self, audio_bytes):
+        """
+        Mock: Converts Speech to Text
+        Real world: call openai.Audio.transcribe("whisper-1", ...)
+        """
+        # Mocking the delay of an API call
+        time.sleep(1)
+        return "தஞ்சாவூர்ல இன்னைக்கு தக்காளி விலை என்ன?" # Mocked Tamil Output
+        
+    def parse_intent(self, text):
+        """
+        Mock: LLM identifying User Intent
+        Input: "Thanjavur la thakkali vilai enna?"
+        Output: { "action": "get_price", "crop": "Tomato", "district": "Thanjavur" }
+        """
+        # Mocking LLM processing
+        intent = {
+            "intent_type": "market_query",
+            "entities": {
+                "crop": "Tomato",
+                "location": "Thanjavur",
+                "time_frame": "today"
+            },
+            "confidence": 0.98
+        }
+        return intent
 
-def search_bar_speech(label, placeholder):
-    """
-    A placeholder function for speech-to-text search integration.
-    Currently returns a standard text input.
-    """
-    return st.text_input(label, placeholder=placeholder)
+    def execute_action(self, intent):
+        """
+        Executes the identified action
+        """
+        if intent['intent_type'] == 'market_query':
+            return f"Market Data Parsed: Fetching price for {intent['entities']['crop']} in {intent['entities']['location']}..."
+        
+        return "Sorry, I didn't understand that command."

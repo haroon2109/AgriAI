@@ -87,8 +87,18 @@ def show_scanner():
             
             # Scanning Animation
             with st.spinner("🕵️ ஆராய்ந்து கொண்டிருக்கிறோம்... (Scanning...)"):
-                st.markdown('<div class="scan-container"><div class="scan-line"></div><p>Er-Arivan is analyzing...</p></div>', unsafe_allow_html=True)
-                time.sleep(3) # Mock processing
+                # Async Workflow: "Don't make the farmer wait"
+                col_wait, col_notify = st.columns([3, 2])
+                with col_wait:
+                    st.markdown('<div class="scan-container"><div class="scan-line"></div><p>Er-Arivan is analyzing...</p></div>', unsafe_allow_html=True)
+                with col_notify:
+                    st.info("Network Slow? (இணையம் மெதுவா?)")
+                    if st.button("📩 Notify me via SMS"):
+                        st.success("✅ Request Queued! We will SMS the result in 2 mins.")
+                        st.caption("You can close this app now. (நீங்கள் செயலியை மூடலாம்)")
+                        return # Exit function, don't show result immediately
+                
+                time.sleep(3) # Mock processing (only if they choose to wait)
                 
             # --- Diagnosis Report ---
             st.success("✅ Analysis Complete! (ஆய்வு முடிந்தது)")
