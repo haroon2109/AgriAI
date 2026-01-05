@@ -254,6 +254,25 @@ else:
         if st.session_state.low_data_mode:
              st.caption("✅ Images Hidden (Speed Boost)")
         
+        # Twilight Mode (Low-Light)
+        twilight_mode = st.toggle("🌙 Twilight Mode (Eye Comfort)", value=False)
+        if twilight_mode:
+            st.markdown("""
+            <style>
+                .stApp { background-color: #3E2723 !important; color: #EFEBE9 !important; }
+                p, h1, h2, h3, label, div, span { color: #EFEBE9 !important; }
+                .stButton>button { background-color: #5D4037 !important; color: #EFEBE9 !important; border: 1px solid #A1887F !important; }
+                .stTextInput>div>div>input { background-color: #4E342E !important; color: #EFEBE9 !important; }
+            </style>
+            """, unsafe_allow_html=True)
+
+        # Backend Wake-up (Silent Ping)
+        if "wake_up_done" not in st.session_state:
+            with st.spinner("🔄 System Warming up..."):
+                time.sleep(0.5) # Simulate silent ping
+            st.session_state.wake_up_done = True
+            st.toast("✅ System Ready & Connected!")
+
         # Navigation Menu
         nav = st.radio("Menu", [
             "Mugappu (Home)", 
@@ -285,58 +304,58 @@ else:
                 st.image("banner.png", use_container_width=True)
             else:
                 st.header("🌾 AgriAI: Smart Farming Assistant")
-        
-        st.title("Mugappu (Home)")
-        
-        # Weather Widget with Crowdsourcing
-        c1, c2 = st.columns([3, 1])
-        with c1:
-            st.info(f"🌤️ **Weather in {st.session_state.user['district']}:** 32°C, Partly Cloudy.")
-        with c2:
-            if st.button("🌧️ Report Rain"):
-                st.toast("Thanks! Your report helps the village.")
                 
-        st.write("Current **Thai Pattam** Season is active. (Harvest Phase)")
-        st.divider()
-        
-        # --- QUICK ACCESS LAUNCHPAD (துரித சேவை) ---
-        st.subheader("📲 Quick Access (துரித சேவை)")
-        
-        # Grid Layout (2x2 for Big Buttons)
-        r1_c1, r1_c2 = st.columns(2)
-        r2_c1, r2_c2 = st.columns(2)
-        
-        # Tile 1: Scanner (Digital Maruthuvar)
-        with r1_c1:
-            if not st.session_state.low_data_mode:
-                st.image("scanner_tech.png", use_container_width=True)
-            if st.button("📸 Digital Maruthuvar (Scanner)", use_container_width=True):
-                st.session_state.page = "Digital Maruthuvar (Scanner)"
-                st.rerun()
-
-        # Tile 2: Market (Pasumai Sandhai)
-        with r1_c2:
-            if not st.session_state.low_data_mode:
-                st.image("market_scene.png", use_container_width=True)
-            if st.button("💰 Pasumai Sandhai (Market)", use_container_width=True):
-                st.session_state.page = "Pasumai Sandhai (Market)"
-                st.rerun()
-                
-        # Tile 3: Advisor (Velaan-Thozhan)
-        with r2_c1:
-            if not st.session_state.low_data_mode:
-                st.image("advisor_mascot.png", use_container_width=True)
-            if st.button("🤖 Velaan-Thozhan (Advisor)", use_container_width=True):
-                st.session_state.page = "Velaan-Thozhan (Advisor)"
-                st.rerun()
-                
-        # Tile 4: Weather/Crowdsourcing
-        with r2_c2:
-            if not st.session_state.low_data_mode:
-                st.image("https://images.unsplash.com/photo-1592210454359-9043f067919b", use_container_width=True)
-            if st.button("🌧️ Weather & Schemes", use_container_width=True):
-                 st.session_state.page = "Arasu Thittam (Schemes)"
-                 st.rerun()
+            st.title("Mugappu (Home)")
+            
+            # Weather Widget with Crowdsourcing
+            c1, c2 = st.columns([3, 1])
+            with c1:
+                st.info(f"🌤️ **Weather in {st.session_state.user['district']}:** 32°C, Partly Cloudy.")
+            with c2:
+                if st.button("🌧️ Report Rain"):
+                    st.toast("Thanks! Your report helps the village.")
+                    
+            st.write("Current **Thai Pattam** Season is active. (Harvest Phase)")
+            st.divider()
+            
+            # --- QUICK ACCESS LAUNCHPAD (துரித சேவை) ---
+            st.subheader("📲 Quick Access (துரித சேவை)")
+            
+            # Grid Layout (2x2 for Big Buttons)
+            r1_c1, r1_c2 = st.columns(2)
+            r2_c1, r2_c2 = st.columns(2)
+            
+            # Tile 1: Scanner (Digital Maruthuvar)
+            with r1_c1:
+                if not st.session_state.low_data_mode:
+                    st.image("scanner_tech.png", use_container_width=True)
+                if st.button("📸 Digital Maruthuvar (Scanner)", use_container_width=True):
+                    st.session_state.page = "Digital Maruthuvar (Scanner)"
+                    st.rerun()
+    
+            # Tile 2: Market (Pasumai Sandhai)
+            with r1_c2:
+                if not st.session_state.low_data_mode:
+                    st.image("market_scene.png", use_container_width=True)
+                if st.button("💰 Pasumai Sandhai (Market)", use_container_width=True):
+                    st.session_state.page = "Pasumai Sandhai (Market)"
+                    st.rerun()
+                    
+            # Tile 3: Advisor (Velaan-Thozhan)
+            with r2_c1:
+                if not st.session_state.low_data_mode:
+                    st.image("advisor_mascot.png", use_container_width=True)
+                if st.button("🤖 Velaan-Thozhan (Advisor)", use_container_width=True):
+                    st.session_state.page = "Velaan-Thozhan (Advisor)"
+                    st.rerun()
+                    
+            # Tile 4: Weather/Crowdsourcing
+            with r2_c2:
+                if not st.session_state.low_data_mode:
+                    st.image("https://images.unsplash.com/photo-1592210454359-9043f067919b", use_container_width=True)
+                if st.button("🌧️ Weather & Schemes", use_container_width=True):
+                     st.session_state.page = "Arasu Thittam (Schemes)"
+                     st.rerun()
         
         elif "Digital Maruthuvar" in pg:
             scanner.show_scanner()

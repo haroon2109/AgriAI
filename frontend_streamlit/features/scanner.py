@@ -79,6 +79,10 @@ def show_scanner():
             </div>
             """, unsafe_allow_html=True)
         else:
+             # Compress before processing (Senior Dev Optimization)
+            compressed_bytes = compress_image(final_file)
+            st.success(f"✅ Image Compressed: {len(final_file.getvalue())/1024:.1f}KB -> {len(compressed_bytes)/1024:.1f}KB")
+            
             st.image(final_file, caption="Analyzing...", use_column_width=True)
             
             # Scanning Animation

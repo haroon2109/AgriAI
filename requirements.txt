@@ -1,6 +1,7 @@
 streamlit
 streamlit-mic-recorder
 fpdf
+Pillow
 pandas
 plotly
 numpy
