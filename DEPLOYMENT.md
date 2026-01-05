@@ -58,13 +58,13 @@ Ensure your code is pushed to a GitHub repository.
 1.  Create another **New Web Service**.
 2.  Connect the same repo.
 3.  **Root Directory**: `.` (Root)
-4.  **Runtime**: Python 3
-5.  **Build Command**: `pip install -r requirements.txt`
-6.  **Start Command**: `streamlit run frontend_streamlit/app.py --server.port 10000 --server.address 0.0.0.0`
-7.  **Environment Variables**:
+6.  **Environment Variables**:
     -   Key: `BACKEND_URL`
     -   Value: `https://agri-backend.onrender.com` (The URL from Step 2)
-8.  Click **Create Web Service**.
+    -   (Optional, for Email):
+        -   `EMAIL_USER`: `mdharoon21@gmail.com`
+        -   `EMAIL_PASSWORD`: `your-16-char-app-password`
+7.  Click **Create Web Service**.
 
 ### Step 4: Verification
 Visit your Frontend URL. It should load the dashboard and communicate with your deployed API!

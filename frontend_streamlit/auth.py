@@ -91,9 +91,20 @@ def send_otp_email(to_email):
     otp = str(random.randint(1000, 9999))
     
     try:
-        email_user = st.secrets["email"]["email_user"]
-        # Strip spaces from app password just in case
-        email_pass = st.secrets["email"]["email_password"].replace(" ", "")
+        # Try finding credentials in secrets.toml first (Local), then Environment Variables (Render)
+        if "email" in st.secrets:
+             email_user = st.secrets["email"]["email_user"]
+             email_pass = st.secrets["email"]["email_password"]
+        else:
+             import os
+             email_user = os.getenv("EMAIL_USER")
+             email_pass = os.getenv("EMAIL_PASSWORD")
+             
+        if not email_user or not email_pass:
+            return None, "Email credentials not configured on server."
+
+        # Strip spaces just in case
+        email_pass = email_pass.replace(" ", "")
         
         msg = EmailMessage()
         msg.set_content(f"🌾 AgriAI Password Reset\n\nYour OTP is: {otp}\n\nplease do not share this code.")
