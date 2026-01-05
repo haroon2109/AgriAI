@@ -1,6 +1,8 @@
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
+import requests
+import os
 
 def show_yield_map():
     st.title("🗺️ District Yield Map (விளைச்சல் வரைபடம்)")
@@ -34,4 +36,21 @@ def show_yield_map():
     with c1:
         st.selectbox("Select Crop Layer", ["Paddy", "Maize", "Cotton"])
     with c2:
-        st.button("🔄 Refresh Satellite Data")
+    with c2:
+        if st.button("🔄 Refresh Satellite Data (Live AI)"):
+            backend_url = os.getenv("BACKEND_URL")
+            if backend_url:
+                try:
+                    # Example API Call
+                    payload = {"district_name": "Thanjavur", "crop": "Paddy"}
+                    res = requests.post(f"{backend_url}/predict_yield", json=payload)
+                    if res.status_code == 200:
+                        data = res.json()
+                        st.success(f"AI Prediction: {data['predicted_yield_kg_per_acre']} kg/acre")
+                        st.json(data)
+                    else:
+                        st.error(f"API Error: {res.status_code}")
+                except Exception as e:
+                    st.error(f"Connection Failed: {e}")
+            else:
+                st.warning("Backend not connected (Running in Offline Mode)")
