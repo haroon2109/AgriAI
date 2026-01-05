@@ -4,7 +4,7 @@
 
 AgriAI is a next-generation agricultural platform designed for Tamil Nadu. It blends cutting-edge AI (Satellite monitoring, Disease Detection) with deep cultural wisdom (Crop Calendars, Traditional Knowledge).
 
-![AgriAI Banner](https://via.placeholder.com/1000x300?text=AgriAI+-+Technology+Meeting+Tradition)
+![AgriAI Banner](banner.png)
 
 ## 🌐 Live Demo
 👉 **[Click Here to Open AgriAI](https://agriai-frontend-57v0.onrender.com)**
