@@ -4,3 +4,7 @@ plotly
 numpy
 streamlit-folium
 folium
+fastapi
+uvicorn
+pydantic
+python-multipart
