@@ -273,6 +273,9 @@ else:
     pg = st.session_state.page
     
     if "Mugappu" in pg:
+        # --- HERO BANNER ---
+        st.image("banner.png", use_container_width=True)
+        
         st.title("Mugappu (Home)")
         
         # Weather Widget with Crowdsourcing

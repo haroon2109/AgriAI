@@ -40,6 +40,7 @@ def show_scanner():
     </style>
     """, unsafe_allow_html=True)
     
+    st.image("scanner_tech.png", use_column_width=True)
     st.markdown("## 🌿 Digital Maruthuvar (பயிர் மருத்துவர்)")
     st.caption("உங்கள் பயிருக்கான நவீன மருத்துவர் (Your Digital Crop Doctor)")
 

@@ -1,6 +1,7 @@
 import streamlit as st
 
 def show_market():
+    st.image("market_scene.png", use_container_width=True)
     st.title("🚜 Pasumai Sandhai (Green Marketplace)")
     st.subheader("Rentals & Services (வாடகை சேவை)")
     

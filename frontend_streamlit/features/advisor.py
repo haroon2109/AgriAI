@@ -8,7 +8,7 @@ def show_advisor():
     # Mascot & Welcome
     c1, c2 = st.columns([1, 4])
     with c1:
-        st.markdown("<div style='font-size:60px;'>🐂</div>", unsafe_allow_html=True) # Bull Mascot Placeholder
+        st.image("advisor_mascot.png", width=150)
     with c2:
         st.info("வணக்கம்! இன்று உங்கள் விவசாயம் செழிக்க நான் என்ன செய்யட்டும்? (Greetings! How can I help your farm flourish today?)")
 
