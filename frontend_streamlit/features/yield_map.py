@@ -27,6 +27,26 @@ def show_yield_map():
             icon=folium.Icon(color=d["color"], icon="leaf")
         ).add_to(m)
 
+    # Pest Alert Layer
+    show_pest = st.toggle("⚠️ Show Pest Heatspots (Yellow Sticker Alert)", value=False)
+    
+    if show_pest:
+        # Mock "Heatspots" from neighbors
+        pest_spots = [
+            [10.8, 79.15], # Thanjavur West
+            [9.95, 78.15], # Madurai North
+        ]
+        for p in pest_spots:
+            folium.CircleMarker(
+                location=p,
+                radius=15,
+                color="red",
+                fill=True,
+                fill_color="red",
+                fill_opacity=0.6,
+                popup="⚠️ Pest Reported by 5 Neighbors!"
+            ).add_to(m)
+
     # 3. Render Map
     st_folium(m, width=800, height=500)
     

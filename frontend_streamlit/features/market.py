@@ -16,7 +16,27 @@ def get_market_data():
 def show_market():
     st.image("market_scene.png", use_container_width=True)
     st.title("🚜 Pasumai Sandhai (Green Marketplace)")
-    st.subheader("Rentals & Services (வாடகை சேவை)")
+    
+    # Tabs for Market Features
+    tab1, tab2 = st.tabs(["📉 Market Prices", "📢 Report Price (விலை அறிக்கை)"])
+    
+    with tab2:
+        st.info("💡 Help your village! Tell us the REAL price you sold at.")
+        with st.form("price_report"):
+            c1, c2 = st.columns(2)
+            crop = c1.selectbox("Crop", ["Tomato", "Paddy", "Cotton"])
+            price = c2.number_input("Sold Price (₹)", step=10)
+            mandi = st.text_input("Mandi Name", "Local Sanda")
+            
+            if st.form_submit_button("Submit Report"):
+                st.success(f"✅ Thank you! reported ₹{price} for {crop} at {mandi}")
+                
+        st.subheader("📢 Recent Farmer Reports")
+        st.markdown("🔹 **Ramasamy** sold **Tomato** for **₹42/kg** at **Ottanchathiram** (10m ago)")
+        st.markdown("🔹 **Kandasamy** sold **Paddy** for **₹1450/q** at **Thanjavur** (1h ago)")
+
+    with tab1:
+        st.subheader("Rentals & Services (வாடகை சேவை)")
     
     tab1, tab2 = st.tabs(["🚜 Machinery Rental ( இயந்திரம்)", "🌾 Sell Produce (விற்பனை)"])
     

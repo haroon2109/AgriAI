@@ -8,7 +8,8 @@ import auth
 import voice_engine
 
 # --- Config & Setup ---
-st.set_page_config(page_title="AgriAI", layout="wide", page_icon="🌾")
+# --- Config & Setup ---
+st.set_page_config(page_title="Smart Agri", layout="wide", page_icon="🌱")
 
 # Initialize DB
 auth.init_db()
@@ -21,7 +22,7 @@ st.markdown("""
 
     /* Global Background and Text */
     .stApp {
-        background-color: #FAFAFA;
+        background-color: #F4F1EA; /* Earthy Tone */
         font-family: 'Noto Sans Tamil', sans-serif;
     }
 

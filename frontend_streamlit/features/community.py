@@ -48,5 +48,11 @@ def show_community():
     st.subheader("🗣️ Ask the Community (கேள்வி கேளுங்கள்)")
     st.text_input("Title", placeholder="Eg. My coconut trees are yellowing...")
     st.text_area("Details", placeholder="Describe the issue...")
-    st.markdown("**🎙️ Or Record a Voice Note:**")
-    st.button("🎤 Start Recording")
+    st.markdown("**🎙️ Or Record a Voice Note (குரல் பதிவு):**")
+    
+    from streamlit_mic_recorder import mic_recorder
+    audio = mic_recorder(start_prompt="🎤 Start (தொடங்கு)", stop_prompt="⏹️ Stop (நிறுத்து)", key='recorder')
+    
+    if audio:
+        st.audio(audio['bytes'])
+        st.success("✅ Voice Note Recorded! (Sent to Community)")
