@@ -102,110 +102,15 @@ st.markdown("""
 
 
 # --- SESSION STATE ---
-if "user" not in st.session_state: st.session_state.user = None
+if "user" not in st.session_state:
+    # Default mock user to bypass login
+    st.session_state.user = {
+        "name": "Guest Farmer",
+        "district": "Madurai",
+        "phone": "9999999999"
+    }
+
 if "page" not in st.session_state: st.session_state.page = "Mugappu"
-
-# --- AUTH CARD COMPONENT ---
-def auth_card():
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    c1, c2, c3 = st.columns([1, 1.5, 1]) # Centered Layout
-    
-    with c2:
-        st.markdown(f"""
-        <div style="text-align:center; padding:20px; border:2px solid #2D4628; border-radius:15px; background:white; margin-bottom:20px;">
-            <h1 style="margin:0;">🌾 AgriAI</h1>
-            <p>Mannum Marabum Edition</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        tab_login, tab_reg, tab_forgot = st.tabs(["🔐 Login (புகு)", "📝 Register (பதிவு)", "❓ Forgot"])
-        
-        with tab_login:
-            with st.form("login_form"):
-                phone = st.text_input("Mobile Number (கைபேசி எண்)")
-                password = st.text_input("Password (கடவுச்சொல்)", type="password")
-                if st.form_submit_button("Login (உள்ளே செல்)"):
-                    user = auth.login_user(phone, password)
-                    if user:
-                        st.session_state.user = user
-                        st.success("Welcome back!")
-                        time.sleep(0.5)
-                        st.rerun()
-                    else:
-                        st.error("Invalid Credentials. Please try again.")
-
-        with tab_reg:
-            with st.form("reg_form"):
-                name = st.text_input("Full Name (பெயர்)")
-                phone_reg = st.text_input("Mobile (10 Digits)")
-                email = st.text_input("Email (For Recovery)")
-                city = st.text_input("Village / City (ஊர்)")
-                dist = st.selectbox("District (மாவட்டம்) ▼", [
-                    "Ariyalur", "Chengalpattu", "Chennai", "Coimbatore", "Cuddalore", "Dharmapuri", 
-                    "Dindigul", "Erode", "Kallakurichi", "Kancheepuram", "Karur", "Krishnagiri", 
-                    "Madurai", "Mayiladuthurai", "Nagapattinam", "Kanyakumari", "Namakkal", 
-                    "Perambalur", "Pudukkottai", "Ramanathapuram", "Ranipet", "Salem", "Sivagangai", 
-                    "Tenkasi", "Thanjavur", "Theni", "The Nilgiris", "Thiruvallur", "Thiruvarur", 
-                    "Thoothukudi", "Tiruchirappalli", "Tirunelveli", "Tirupathur", "Tiruppur", 
-                    "Tiruvannamalai", "Vellore", "Viluppuram", "Virudhunagar"
-                ])
-                pass_reg = st.text_input("Create Password", type="password")
-                
-                if st.form_submit_button("Create Account"):
-                    ok, msg = auth.register_user(name, phone_reg, email, city, dist, pass_reg)
-                    if ok:
-                        st.success("Registration Successful! Please Login.")
-                    else:
-                        st.error(msg)
-        
-        with tab_forgot:
-            st.write("🔄 **Reset Password (கடவுச்சொல் மீட்பு)**")
-            
-            if "forgot_step" not in st.session_state:
-                st.session_state.forgot_step = 1
-            
-            # Step 1: Input Email
-            if st.session_state.forgot_step == 1:
-                email_input = st.text_input("Enter Registered Email")
-                if st.button("Send OTP"):
-                    phone_assoc = auth.check_email_exists(email_input)
-                    if phone_assoc:
-                        # Send Email
-                        otp, err = auth.send_otp_email(email_input)
-                        if otp:
-                            st.session_state.otp_generated = otp
-                            st.session_state.reset_phone = phone_assoc
-                            st.session_state.forgot_step = 2
-                            st.success(f"OTP sent to {email_input}")
-                            st.rerun()
-                        else:
-                            st.error(f"Failed to send email: {err}")
-                    else:
-                        st.error("Email not found!")
-            
-            # Step 2: Verify OTP
-            elif st.session_state.forgot_step == 2:
-                otp_input = st.text_input("Enter 4-Digit OTP")
-                if st.button("Verify OTP"):
-                    if otp_input == st.session_state.otp_generated:
-                        st.success("Verified!")
-                        st.session_state.forgot_step = 3
-                        st.rerun()
-                    else:
-                        st.error("Invalid OTP")
-            
-            # Step 3: New Password
-            elif st.session_state.forgot_step == 3:
-                new_pass = st.text_input("New Password", type="password")
-                confirm_pass = st.text_input("Confirm Password", type="password")
-                
-                if st.button("Change Password"):
-                    if new_pass == confirm_pass and len(new_pass) > 3:
-                        auth.update_password(st.session_state.reset_phone, new_pass)
-                        st.success("Password Updated! Please Login.")
-                        st.session_state.forgot_step = 1
-                    else:
-                        st.error("Passwords must match and be > 3 chars")
 
 # Import local features
 import features.scanner as scanner
@@ -221,177 +126,174 @@ import features.market as market
 import features.yield_map as yield_map
 
 # --- MAIN APP FLOW ---
-if not st.session_state.user:
-    auth_card()
-else:
-    # --- DASHBOARD (Only visible after login) ---
+# --- DASHBOARD (Only visible after login) ---
     
     # Sidebar
-    with st.sidebar:
-        st.title(f"👨🏾‍🌾 {st.session_state.user['name']}")
-        st.caption(f"📍 {st.session_state.user['district']}")
-        
-        # Dialect Selection
-        st.selectbox("🗣️ Voice Dialect", ["General Tamil", "Kongu Tamil", "Nellai Tamil", "Madurai Tamil"])
-        
-        # Sunlight Mode Toggle
-        sunlight_mode = st.toggle("☀️ Sunlight Mode (வெயில் நேரம்)")
-        if sunlight_mode:
-            st.markdown("""
-            <style>
-                .stApp { background-color: #FFFFFF !important; }
-                h1, h2, h3, h4, h5, p, div, span, label { color: #000000 !important; font-weight: 900 !important; }
-                /* Updated: High Contrast White Mode */
-                .stButton>button { background-color: #FFFFFF !important; color: #000000 !important; border: 2px solid #2D4628 !important; }
-                .stTextInput>div>div>input { background-color: #FFFFFF !important; color: #000000 !important; border: 2px solid #2D4628 !important; }
-                /* Ensure selectboxes are also white */
-                .stSelectbox>div>div>div { background-color: #FFFFFF !important; color: #000000 !important; border: 2px solid #2D4628 !important; }
-                /* Force SVG Arrow to be Dark Green */
-                div[data-baseweb="select"] svg { fill: #2D4628 !important; }
-            </style>
-            """, unsafe_allow_html=True)
-        
-        # Data-Light Mode (2G Optimized)
-        st.session_state.low_data_mode = st.toggle("📉 Data-Light Mode (2G)", value=False)
-        if st.session_state.low_data_mode:
-             st.caption("✅ Images Hidden (Speed Boost)")
-        
-        # Twilight Mode (Low-Light)
-        twilight_mode = st.toggle("🌙 Twilight Mode (Eye Comfort)", value=False)
-        if twilight_mode:
-            st.markdown("""
-            <style>
-                .stApp { background-color: #3E2723 !important; color: #EFEBE9 !important; }
-                p, h1, h2, h3, label, div, span { color: #EFEBE9 !important; }
-                .stButton>button { background-color: #5D4037 !important; color: #EFEBE9 !important; border: 1px solid #A1887F !important; }
-                .stTextInput>div>div>input { background-color: #4E342E !important; color: #EFEBE9 !important; }
-            </style>
-            """, unsafe_allow_html=True)
-
-        # Backend Wake-up (Silent Ping)
-        if "wake_up_done" not in st.session_state:
-            with st.spinner("🔄 System Warming up..."):
-                time.sleep(0.5) # Simulate silent ping
-            st.session_state.wake_up_done = True
-            st.toast("✅ System Ready & Connected!")
-
-        # Navigation Menu
-        nav = st.radio("Menu", [
-            "Mugappu (Home)", 
-            "Digital Maruthuvar (Scanner)", 
-            "Velaan-Thozhan (Advisor)",
-            "Uzhavar Sangamam (Community)",
-            "Pasumai Sandhai (Market)", 
-            "Arasu Thittam (Schemes)",
-            "Digital Pattayam (Docs)",
-            "Ura-Kanakku (Fertilizer)",
-            "Velaan-Thirai (Videos)",
-            "Sat-Map (Yield Forecast)",
-            "Pattam Pricing (Plans)",
-            "Mannum Manamum (About Us)"
-        ])
-        st.session_state.page = nav
-        st.divider()
-        if st.button("Logout"):
-            st.session_state.user = None
-            st.rerun()
+with st.sidebar:
+    st.title(f"👨🏾‍🌾 {st.session_state.user['name']}")
+    st.caption(f"📍 {st.session_state.user['district']}")
     
-    # Page Routing with Global Error Handling
-    try:
-        pg = st.session_state.page
+    # Dialect Selection
+    st.selectbox("🗣️ Voice Dialect", ["General Tamil", "Kongu Tamil", "Nellai Tamil", "Madurai Tamil"])
+    
+    # Sunlight Mode Toggle
+    sunlight_mode = st.toggle("☀️ Sunlight Mode (வெயில் நேரம்)")
+    if sunlight_mode:
+        st.markdown("""
+        <style>
+            .stApp { background-color: #FFFFFF !important; }
+            h1, h2, h3, h4, h5, p, div, span, label { color: #000000 !important; font-weight: 900 !important; }
+            /* Updated: High Contrast White Mode */
+            .stButton>button { background-color: #FFFFFF !important; color: #000000 !important; border: 2px solid #2D4628 !important; }
+            .stTextInput>div>div>input { background-color: #FFFFFF !important; color: #000000 !important; border: 2px solid #2D4628 !important; }
+            /* Ensure selectboxes are also white */
+            .stSelectbox>div>div>div { background-color: #FFFFFF !important; color: #000000 !important; border: 2px solid #2D4628 !important; }
+            /* Force SVG Arrow to be Dark Green */
+            div[data-baseweb="select"] svg { fill: #2D4628 !important; }
+        </style>
+        """, unsafe_allow_html=True)
+    
+    # Data-Light Mode (2G Optimized)
+    st.session_state.low_data_mode = st.toggle("📉 Data-Light Mode (2G)", value=False)
+    if st.session_state.low_data_mode:
+            st.caption("✅ Images Hidden (Speed Boost)")
+    
+    # Twilight Mode (Low-Light)
+    twilight_mode = st.toggle("🌙 Twilight Mode (Eye Comfort)", value=False)
+    if twilight_mode:
+        st.markdown("""
+        <style>
+            .stApp { background-color: #3E2723 !important; color: #EFEBE9 !important; }
+            p, h1, h2, h3, label, div, span { color: #EFEBE9 !important; }
+            .stButton>button { background-color: #5D4037 !important; color: #EFEBE9 !important; border: 1px solid #A1887F !important; }
+            .stTextInput>div>div>input { background-color: #4E342E !important; color: #EFEBE9 !important; }
+        </style>
+        """, unsafe_allow_html=True)
+
+    # Backend Wake-up (Silent Ping)
+    if "wake_up_done" not in st.session_state:
+        with st.spinner("🔄 System Warming up..."):
+            time.sleep(0.5) # Simulate silent ping
+        st.session_state.wake_up_done = True
+        st.toast("✅ System Ready & Connected!")
+
+    # Navigation Menu
+    nav = st.radio("Menu", [
+        "Mugappu (Home)", 
+        "Digital Maruthuvar (Scanner)", 
+        "Velaan-Thozhan (Advisor)",
+        "Uzhavar Sangamam (Community)",
+        "Pasumai Sandhai (Market)", 
+        "Arasu Thittam (Schemes)",
+        "Digital Pattayam (Docs)",
+        "Ura-Kanakku (Fertilizer)",
+        "Velaan-Thirai (Videos)",
+        "Sat-Map (Yield Forecast)",
+        "Pattam Pricing (Plans)",
+        "Mannum Manamum (About Us)"
+    ])
+    st.session_state.page = nav
+    st.divider()
+    if st.button("Logout"):
+        st.session_state.user = None
+        st.rerun()
+
+# Page Routing with Global Error Handling
+try:
+    pg = st.session_state.page
+    
+    if "Mugappu" in pg:
+        # --- HERO BANNER ---
+        if not st.session_state.low_data_mode:
+            st.image("banner.png", use_container_width=True)
+        else:
+            st.header("🌾 AgriAI: Smart Farming Assistant")
+            
+        st.title("Mugappu (Home)")
         
-        if "Mugappu" in pg:
-            # --- HERO BANNER ---
-            if not st.session_state.low_data_mode:
-                st.image("banner.png", use_container_width=True)
-            else:
-                st.header("🌾 AgriAI: Smart Farming Assistant")
+        # Weather Widget with Crowdsourcing
+        c1, c2 = st.columns([3, 1])
+        with c1:
+            st.info(f"🌤️ **Weather in {st.session_state.user['district']}:** 32°C, Partly Cloudy.")
+        with c2:
+            if st.button("🌧️ Report Rain"):
+                st.toast("Thanks! Your report helps the village.")
                 
-            st.title("Mugappu (Home)")
-            
-            # Weather Widget with Crowdsourcing
-            c1, c2 = st.columns([3, 1])
-            with c1:
-                st.info(f"🌤️ **Weather in {st.session_state.user['district']}:** 32°C, Partly Cloudy.")
-            with c2:
-                if st.button("🌧️ Report Rain"):
-                    st.toast("Thanks! Your report helps the village.")
-                    
-            st.write("Current **Thai Pattam** Season is active. (Harvest Phase)")
-            st.divider()
-            
-            # --- QUICK ACCESS LAUNCHPAD (துரித சேவை) ---
-            st.subheader("📲 Quick Access (துரித சேவை)")
-            
-            # Grid Layout (2x2 for Big Buttons)
-            r1_c1, r1_c2 = st.columns(2)
-            r2_c1, r2_c2 = st.columns(2)
-            
-            # Tile 1: Scanner (Digital Maruthuvar)
-            with r1_c1:
-                if not st.session_state.low_data_mode:
-                    st.image("scanner_tech.png", use_container_width=True)
-                if st.button("📸 Digital Maruthuvar (Scanner)", use_container_width=True):
-                    st.session_state.page = "Digital Maruthuvar (Scanner)"
-                    st.rerun()
-    
-            # Tile 2: Market (Pasumai Sandhai)
-            with r1_c2:
-                if not st.session_state.low_data_mode:
-                    st.image("market_scene.png", use_container_width=True)
-                if st.button("💰 Pasumai Sandhai (Market)", use_container_width=True):
-                    st.session_state.page = "Pasumai Sandhai (Market)"
-                    st.rerun()
-                    
-            # Tile 3: Advisor (Velaan-Thozhan)
-            with r2_c1:
-                if not st.session_state.low_data_mode:
-                    st.image("advisor_mascot.png", use_container_width=True)
-                if st.button("🤖 Velaan-Thozhan (Advisor)", use_container_width=True):
-                    st.session_state.page = "Velaan-Thozhan (Advisor)"
-                    st.rerun()
-                    
-            # Tile 4: Weather/Crowdsourcing
-            with r2_c2:
-                if not st.session_state.low_data_mode:
-                    st.image("https://images.unsplash.com/photo-1592210454359-9043f067919b", use_container_width=True)
-                if st.button("🌧️ Weather & Schemes", use_container_width=True):
-                     st.session_state.page = "Arasu Thittam (Schemes)"
-                     st.rerun()
+        st.write("Current **Thai Pattam** Season is active. (Harvest Phase)")
+        st.divider()
         
-        elif "Digital Maruthuvar" in pg:
-            scanner.show_scanner()
-    
-        elif "Schemes" in pg:
-            schemes.show_schemes()
-            
-        elif "Fertilizer" in pg:
-            fertilizer.show_fertilizer()
-    
-        elif "Videos" in pg:
-            videos.show_videos()
-            
-        elif "Community" in pg:
-            community.show_community()
-    
-        elif "Market" in pg:
-            market.show_market()
-            
-        elif "Advisor" in pg:
-            advisor.show_advisor()
-    
-        elif "Docs" in pg:
-            documents.show_documents()
-    
-        elif "Yield Forecast" in pg:
-            yield_map.show_yield_map()
-            
-        elif "Pricing" in pg:
-            pricing.show_pricing()
-            
-        elif "About" in pg:
-            about.show_about()
+        # --- QUICK ACCESS LAUNCHPAD (துரித சேவை) ---
+        st.subheader("📲 Quick Access (துரித சேவை)")
+        
+        # Grid Layout (2x2 for Big Buttons)
+        r1_c1, r1_c2 = st.columns(2)
+        r2_c1, r2_c2 = st.columns(2)
+        
+        # Tile 1: Scanner (Digital Maruthuvar)
+        with r1_c1:
+            if not st.session_state.low_data_mode:
+                st.image("scanner_tech.png", use_container_width=True)
+            if st.button("📸 Digital Maruthuvar (Scanner)", use_container_width=True):
+                st.session_state.page = "Digital Maruthuvar (Scanner)"
+                st.rerun()
 
-    except Exception as e:
-        st.error("மன்னிக்கவும், தொழில்நுட்ப கோளாறு (Sorry, Technical Error)")
-        st.error(f"Details: {str(e)}")
+        # Tile 2: Market (Pasumai Sandhai)
+        with r1_c2:
+            if not st.session_state.low_data_mode:
+                st.image("market_scene.png", use_container_width=True)
+            if st.button("💰 Pasumai Sandhai (Market)", use_container_width=True):
+                st.session_state.page = "Pasumai Sandhai (Market)"
+                st.rerun()
+                
+        # Tile 3: Advisor (Velaan-Thozhan)
+        with r2_c1:
+            if not st.session_state.low_data_mode:
+                st.image("advisor_mascot.png", use_container_width=True)
+            if st.button("🤖 Velaan-Thozhan (Advisor)", use_container_width=True):
+                st.session_state.page = "Velaan-Thozhan (Advisor)"
+                st.rerun()
+                
+        # Tile 4: Weather/Crowdsourcing
+        with r2_c2:
+            if not st.session_state.low_data_mode:
+                st.image("https://images.unsplash.com/photo-1592210454359-9043f067919b", use_container_width=True)
+            if st.button("🌧️ Weather & Schemes", use_container_width=True):
+                 st.session_state.page = "Arasu Thittam (Schemes)"
+                 st.rerun()
+        
+    elif "Digital Maruthuvar" in pg:
+        scanner.show_scanner()
+
+    elif "Schemes" in pg:
+        schemes.show_schemes()
+        
+    elif "Fertilizer" in pg:
+        fertilizer.show_fertilizer()
+
+    elif "Videos" in pg:
+        videos.show_videos()
+        
+    elif "Community" in pg:
+        community.show_community()
+
+    elif "Market" in pg:
+        market.show_market()
+        
+    elif "Advisor" in pg:
+        advisor.show_advisor()
+
+    elif "Docs" in pg:
+        documents.show_documents()
+
+    elif "Yield Forecast" in pg:
+        yield_map.show_yield_map()
+        
+    elif "Pricing" in pg:
+        pricing.show_pricing()
+        
+    elif "About" in pg:
+        about.show_about()
+
+except Exception as e:
+    st.error("மன்னிக்கவும், தொழில்நுட்ப கோளாறு (Sorry, Technical Error)")
+    st.error(f"Details: {str(e)}")
