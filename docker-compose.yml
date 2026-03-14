@@ -1,50 +1,57 @@
 version: '3.8'
 
 services:
-  # 1. FastAPI Backend (Brain)
-  backend:
+  # 1. PostgreSQL Database
+  db:
+    image: postgis/postgis:15-3.3
+    container_name: agri_db
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=agriai
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init_postgis.sql:/docker-entrypoint-initdb.d/init_postgis.sql
+
+  # 2. FastAPI ML Backend (Brain)
+  ml_backend:
     build: ./backend_api
-    container_name: agri_backend
+    container_name: agri_ml_backend
+    restart: always
     ports:
       - "8000:8000"
     volumes:
       - ./backend_api:/app
     environment:
-      - DB_HOST=db
-      - DB_NAME=agri_pro
-      - DB_USER=postgres
-      - DB_PASS=password
+      - DATABASE_URL=postgres://postgres:password@db:5432/agriai
+
+  # 3. Core Node.js API (Heart)
+  core_api:
+    build: ./backend_node
+    container_name: agri_core_api
+    restart: always
     depends_on:
       - db
+      - ml_backend
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=postgres://postgres:password@db:5432/agriai
+      - JWT_SECRET=supersecretkey123
+      - FASTAPI_URL=http://ml_backend:8000
 
-  # 2. Streamlit Frontend (Face)
+  # 4. React Frontend (Face)
   frontend:
-    build:
-      context: .
-      dockerfile: frontend_streamlit/Dockerfile
+    build: ./frontend_react
     container_name: agri_frontend
+    restart: always
     ports:
-      - "8501:8501"
-    volumes:
-      - .:/app
-    environment:
-      - BACKEND_URL=http://backend:8000
+      - "80:80"
     depends_on:
-      - backend
-
-  # 3. PostGIS Database (Memory)
-  db:
-    image: postgis/postgis:15-3.3
-    container_name: agri_db
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=agri_pro
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./database/init_postgis.sql:/docker-entrypoint-initdb.d/init_postgis.sql
+      - core_api
 
 volumes:
   postgres_data:

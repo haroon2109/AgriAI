@@ -158,17 +158,7 @@ with st.sidebar:
     if st.session_state.low_data_mode:
             st.caption("✅ Images Hidden (Speed Boost)")
     
-    # Twilight Mode (Low-Light)
-    twilight_mode = st.toggle("🌙 Twilight Mode (Eye Comfort)", value=False)
-    if twilight_mode:
-        st.markdown("""
-        <style>
-            .stApp { background-color: #3E2723 !important; color: #EFEBE9 !important; }
-            p, h1, h2, h3, label, div, span { color: #EFEBE9 !important; }
-            .stButton>button { background-color: #5D4037 !important; color: #EFEBE9 !important; border: 1px solid #A1887F !important; }
-            .stTextInput>div>div>input { background-color: #4E342E !important; color: #EFEBE9 !important; }
-        </style>
-        """, unsafe_allow_html=True)
+        
 
     # Backend Wake-up (Silent Ping)
     if "wake_up_done" not in st.session_state:

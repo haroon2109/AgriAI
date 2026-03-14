@@ -1,0 +1,31 @@
+name: AgriAI CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build Core API
+      run: docker build ./backend_node -t agri-core-api:latest
+
+    - name: Build ML Backend
+      run: docker build ./backend_api -t agri-ml-backend:latest
+
+    - name: Build Frontend
+      run: docker build ./frontend_react -t agri-frontend:latest
+
+    # Add deployment steps here (e.g., push to Docker Hub, deploy to Render/DigitalOcean)
+    # - name: Deploy to Production
+    #   if: github.ref == 'refs/heads/main'
+    #   run: echo "Deploying to production..."
