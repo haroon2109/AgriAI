@@ -1,77 +1,63 @@
-# 🚀 AgriAI Deployment Guide
+# 🚀 AgriAI Deployment Guide (Updated)
 
-This guide covers how to run AgriAI locally for development and how to deploy it to the cloud (Render.com).
+This guide covers the modern, microservices-based deployment of AgriAI using React, Node.js, FastAPI, and Supabase.
 
-## 💻 1. Local Development (Windows)
+## 🏗️ 1. Architecture Overview
+- **Frontend (Face)**: [React + Tailwind](file:///c:/Users/moham/OneDrive/Desktop/Folderzz/AgriAI/frontend_react) (Hosted on Vercel)
+- **Core API (Heart)**: [Node.js + Express](file:///c:/Users/moham/OneDrive/Desktop/Folderzz/AgriAI/backend_node) (Hosted on Render)
+- **ML Backend (Brain)**: [FastAPI](file:///c:/Users/moham/OneDrive/Desktop/Folderzz/AgriAI/backend_api) (Hosted on Render)
+- **Database**: PostgreSQL (Hosted on Supabase)
 
-### Prerequisites
--   **Python 3.9+** installed.
--   **Git** installed.
--   **Docker Desktop** (Optional, for Full Stack).
+---
 
-### Option A: Frontend Only (Fastest)
-Use this if you just want to work on the UI.
-1.  Open Terminal in the project folder:
-    ```powershell
-    cd C:\Users\moham\OneDrive\Desktop\Folderzz\AgriAI
-    ```
-2.  Install dependencies:
-    ```powershell
-    pip install -r requirements.txt
-    ```
-3.  Run the App:
-    ```powershell
-    streamlit run frontend_streamlit/app.py
-    ```
-4.  Open http://localhost:8501
+## 💻 2. Local Development (Docker)
 
-### Option B: Full Stack (Docker)
-Use this to run the Frontend, Backend API, and Database together.
-1.  Ensure Docker Desktop is running.
-2.  Run the command:
+1.  **Ensure Docker Desktop** is running.
+2.  **Environment Setup**:
+    -   Create `.env` files in `backend_node` and `backend_api` based on the `.env.example` templates.
+3.  **Run the Stack**:
     ```powershell
     docker-compose up --build
     ```
-3.  Access Points:
-    -   **App**: http://localhost:8501
-    -   **API**: http://localhost:8000/docs
+4.  **Access Points**:
+    -   **Frontend**: http://localhost:3000
+    -   **Core API**: http://localhost:5000/api
+    -   **ML Docs**: http://localhost:8000/docs
 
 ---
 
-## ☁️ 2. Cloud Deployment (Render.com)
+## ☁️ 3. Production Deployment
 
-We recommend **Render** as it offers a free tier for Web Services and Docker.
+### Step 1: Database (Supabase)
+- Create a new project on Supabase.
+- Copy the **Connection String** (PostgreSQL) and save it for the Core API.
 
-### Step 1: Push Code to GitHub
-Ensure your code is pushed to a GitHub repository.
-
-### Step 2: Deploy Backend API
+### Step 2: ML Backend (Render)
 1.  Create a **New Web Service** on Render.
-2.  Connect your GitHub repo.
-3.  **Root Directory**: leave blank (Default)
-4.  **Runtime**: Python 3
-5.  **Build Command**: `pip install -r requirements.txt`
-6.  **Start Command**: `uvicorn backend_api.main:app --host 0.0.0.0 --port 10000`
-7.  Click **Create Web Service**. Copy the URL (e.g., `https://agri-backend.onrender.com`).
+2.  Connect your repo, set Root Directory to `backend_api`.
+3.  Render will auto-detect the `Dockerfile`.
+4.  Once live, copy the URL (e.g., `https://agri-ml.onrender.com`).
 
-### Step 3: Deploy Frontend Dashboard
-1.  Create another **New Web Service**.
-2.  Connect the same repo.
-3.  **Root Directory**: `.` (Root)
-6.  **Environment Variables**:
-    -   Key: `BACKEND_URL`
-    -   Value: `https://agri-backend.onrender.com` (The URL from Step 2)
-    -   (Optional, for Email):
-        -   `EMAIL_USER`: `mdharoon21@gmail.com`
-        -   `EMAIL_PASSWORD`: `your-16-char-app-password`
-7.  Click **Create Web Service**.
+### Step 3: Core API (Render)
+1.  Create a **New Web Service**, set Root Directory to `backend_node`.
+2.  Add Environment Variables:
+    -   `DATABASE_URL`: Your Supabase link.
+    -   `JWT_SECRET`: A secure random string.
+    -   `FASTAPI_URL`: The URL from Step 2.
+3.  Once live, copy the URL (e.g., `https://agri-core.onrender.com`).
 
-### Step 4: Verification
-Visit your Frontend URL. It should load the dashboard and communicate with your deployed API!
+### Step 4: Frontend (Vercel)
+1.  Import your repo to Vercel, set Root Directory to `frontend_react`.
+2.  Add Environment Variable:
+    -   `VITE_API_URL`: The URL from Step 3 (add `/api` at the end).
+3.  Deploy!
 
 ---
 
-## 🛠️ Troubleshooting
-
--   **Black Screen?**: We have forced Light Mode in `.streamlit/config.toml`. If issues persist, clear browser cache.
--   **API Error?**: Ensure `BACKEND_URL` is set correctly in the Frontend environment variables.
+## 🏺 4. Legacy Streamlit Flow
+The original Streamlit dashboard is preserved in [legacy_archive/frontend_streamlit](file:///c:/Users/moham/OneDrive/Desktop/Folderzz/AgriAI/legacy_archive/frontend_streamlit) for internal testing.
+To run it:
+```powershell
+pip install -r backend_api/requirements.txt
+streamlit run legacy_archive/frontend_streamlit/app.py
+```

@@ -168,7 +168,7 @@ with st.sidebar:
         st.toast("✅ System Ready & Connected!")
 
     # Navigation Menu
-    nav = st.radio("Menu", [
+    nav_options = [
         "Mugappu (Home)", 
         "Digital Maruthuvar (Scanner)", 
         "Velaan-Thozhan (Advisor)",
@@ -181,8 +181,21 @@ with st.sidebar:
         "Sat-Map (Yield Forecast)",
         "Pattam Pricing (Plans)",
         "Mannum Manamum (About Us)"
-    ])
-    st.session_state.page = nav
+    ]
+    
+    # Find current index to avoid reset on rerun
+    try:
+        current_idx = nav_options.index(st.session_state.page)
+    except:
+        current_idx = 0
+
+    nav = st.radio("Menu", nav_options, index=current_idx)
+    
+    # Only update if the radio button itself was clicked
+    if nav != st.session_state.page:
+        st.session_state.page = nav
+        st.rerun()
+
     st.divider()
     if st.button("Logout"):
         st.session_state.user = None

@@ -34,13 +34,12 @@ services:
     container_name: agri_core_api
     restart: always
     depends_on:
-      - db
       - ml_backend
     ports:
       - "5000:5000"
     environment:
       - DATABASE_URL=postgres://postgres:password@db:5432/agriai
-      - JWT_SECRET=supersecretkey123
+      - JWT_SECRET=AgriAI_2026_Secure_Token@Thanjavur_123!@#
       - FASTAPI_URL=http://ml_backend:8000
 
   # 4. React Frontend (Face)
@@ -49,9 +48,11 @@ services:
     container_name: agri_frontend
     restart: always
     ports:
-      - "80:80"
+      - "3000:3000"
     depends_on:
       - core_api
+    environment:
+      - VITE_API_URL=http://localhost:5000/api
 
 volumes:
   postgres_data:
