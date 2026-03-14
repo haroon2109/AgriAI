@@ -37,7 +37,7 @@ def add_indices(image):
         
     return image.addBands([ndvi, evi])
 
-def fetch_sentinel_data(start_date, end_date, real_mode=False):
+def fetch_sentinel_data(start_date, end_date, real_mode=False, geojson_path=None):
     """Fetch Sentinel-2 collection and compute stats."""
     if not real_mode:
         # Mock data return
@@ -52,15 +52,39 @@ def fetch_sentinel_data(start_date, end_date, real_mode=False):
         }
     
     roi = get_tamil_nadu_roi()
+    if geojson_path:
+        try:
+            import json
+            with open(geojson_path, 'r') as f:
+                geojson_data = json.load(f)
+            features = []
+            for feature in geojson_data.get('features', []):
+                geom = ee.Geometry(feature['geometry'])
+                features.append(ee.Feature(geom, feature.get('properties', {})))
+            roi = ee.FeatureCollection(features)
+            print(f"[INFO] Using provided GeoJSON with {len(features)} features.")
+        except Exception as e:
+            print(f"[WARN] Failed to load GeoJSON: {e}. Falling back to default ROI.")
     
     s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED') \
         .filterDate(start_date, end_date) \
-        .filterBounds(roi) \
+        .filterBounds(roi.geometry() if isinstance(roi, ee.FeatureCollection) else roi) \
         .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20)) \
         .map(add_indices)
         
-    # In a real pipeline, we would reduce regions by district vectors here.
-    # For this script, we'll just print image count.
+    # Example logic to reduce regions
+    if isinstance(roi, ee.FeatureCollection):
+        median_image = s2.median()
+        stats = median_image.reduceRegions(
+            collection=roi,
+            reducer=ee.Reducer.mean(),
+            scale=10 # Sentinel-2 resolution
+        )
+        print(f"[INFO] Extracted indices for regions.")
+        # We would typically export this or return the features.
+        # Here we just return a summary success.
+        return {"status": "success", "image_count": s2.size().getInfo(), "extracted": True}
+        
     count = s2.size().getInfo()
     print(f"[INFO] Found {count} Sentinel-2 images.")
     

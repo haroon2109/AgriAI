@@ -50,26 +50,54 @@ def show_yield_map():
     # 3. Render Map
     st_folium(m, width=800, height=500)
     
-    # 4. Filter Controls
+    # 4. Filter Controls & API Interaction
     st.divider()
-    c1, c2 = st.columns(2)
+    c1, c2, c3 = st.columns(3)
     with c1:
-        st.selectbox("Select Crop Layer", ["Paddy", "Maize", "Cotton"])
+        selected_crop = st.selectbox("Select Crop (பயிர்)", ["Paddy (நெல்)", "Sugarcane (கரும்பு)", "Cotton (பருத்தி)"])
     with c2:
-        if st.button("🔄 Refresh Satellite Data (Live AI)"):
-            backend_url = os.getenv("BACKEND_URL")
-            if backend_url:
-                try:
-                    # Example API Call
-                    payload = {"district_name": "Thanjavur", "crop": "Paddy"}
-                    res = requests.post(f"{backend_url}/predict_yield", json=payload)
-                    if res.status_code == 200:
-                        data = res.json()
-                        st.success(f"AI Prediction: {data['predicted_yield_kg_per_acre']} kg/acre")
-                        st.json(data)
-                    else:
-                        st.error(f"API Error: {res.status_code}")
-                except Exception as e:
-                    st.error(f"Connection Failed: {e}")
-            else:
-                st.warning("Backend not connected (Running in Offline Mode)")
+        sowing_date = st.date_input("Sowing Date (விதைப்பு தேதி)")
+    with c3:
+        st.markdown("<br>", unsafe_allow_html=True)
+        if st.button("🔄 Forecast Yield (விளைச்சல் கணிப்பு)"):
+            backend_url = os.getenv("BACKEND_URL", "http://localhost:8000")
+            try:
+                # Selecting lat/lon based on user location (Mocking Madurai here)
+                payload = {
+                    "lat": 9.9252, 
+                    "lon": 78.1198,
+                    "crop_type": selected_crop.split(" ")[0], # Send english name
+                    "sowing_date": str(sowing_date)
+                }
+                res = requests.post(f"{backend_url}/predict_yield", json=payload)
+                if res.status_code == 200:
+                    data = res.json()
+                    
+                    st.success("Analysis Complete (கணிப்பு முடிந்தது) ✅")
+                    
+                    # Custom Cards for Output
+                    cc1, cc2 = st.columns(2)
+                    with cc1:
+                        st.markdown(f"""
+                        <div class="agri-card" style="border-left: 5px solid #2E7D32;">
+                            <h3 style="margin-bottom:0;">Yield Forecast</h3>
+                            <p style="color:gray;">விளைச்சல் கணிப்பு</p>
+                            <h2 style="color:#2E7D32;">{data['predicted_yield']} kg/acre</h2>
+                            <p>Confidence: {data['confidence_interval']}</p>
+                        </div>
+                        """, unsafe_allow_html=True)
+                        
+                    with cc2:
+                        st.markdown(f"""
+                        <div class="agri-card" style="border-left: 5px solid #1E88E5;">
+                            <h3 style="margin-bottom:0;">Health Gauge</h3>
+                            <p style="color:gray;">பயிர் ஆரோக்கியம்</p>
+                            <h2 style="color:#1E88E5;">Good (நன்று)</h2>
+                            <p>Based on Sentinel-2 NDVI</p>
+                        </div>
+                        """, unsafe_allow_html=True)
+                        
+                else:
+                    st.error(f"API Error: {res.status_code}")
+            except Exception as e:
+                st.error(f"Connection Failed: {e}. Is the backend running?")

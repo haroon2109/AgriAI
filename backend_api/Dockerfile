@@ -5,7 +5,7 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Install system dependencies (for Geopandas/Shapely if needed later)
-# RUN apt-get update && apt-get install -y libgdal-dev
+RUN apt-get update && apt-get install -y libgdal-dev sqlite3
 
 # Copy requirements
 COPY requirements.txt .
@@ -15,6 +15,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy app code
 COPY . .
+
+# Ensure database directory exists
+RUN mkdir -p database
 
 # Expose port (FastAPI default)
 EXPOSE 8000

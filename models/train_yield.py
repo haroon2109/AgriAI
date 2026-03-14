@@ -8,7 +8,7 @@ from sklearn.metrics import mean_absolute_error, r2_score
 import json
 
 # Paths
-DATA_PATH = "data_pipeline/yield_data.csv"
+DATA_PATH = "data_pipeline/synthetic_tabular_data.csv"
 MODEL_DIR = "models/artifacts"
 MODEL_PATH = os.path.join(MODEL_DIR, "yield_model.pkl")
 
@@ -19,7 +19,7 @@ def get_data_from_db():
     """
     print("[INFO] DB Connection not active. Loading from local CSV cache.")
     if not os.path.exists(DATA_PATH):
-        raise FileNotFoundError(f"{DATA_PATH} not found. Run fetch_yield.py first.")
+        raise FileNotFoundError(f"{DATA_PATH} not found. Run ingest_tabular.py first.")
     return pd.read_csv(DATA_PATH)
 
 def train_yield_model():
@@ -46,8 +46,9 @@ def train_yield_model():
     }
     
     # Feature Selection
-    # In a real scenario, we'd include rainfall/soil data which would be joined in `fetch_yield.py`
-    features = ['District_Code', 'Season_Code', 'Crop_Code', 'Year']
+    features = ['District_Code', 'Season_Code', 'Crop_Code', 'Year', 
+                'Rainfall_mm', 'Temp_Min_C', 'Temp_Max_C', 'Humidity_Pct', 
+                'pH_Level', 'Nitrogen_kgha', 'Phosphorus_kgha', 'Potassium_kgha']
     target = 'Yield_Tonnes_Hectare'
     
     X = df[features]

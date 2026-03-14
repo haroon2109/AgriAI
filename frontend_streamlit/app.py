@@ -22,34 +22,36 @@ st.markdown("""
 
     /* Global Background and Text */
     .stApp {
-        background-color: #F4F1EA; /* Earthy Tone */
+        background-color: #F0FDF4; /* Calm Light Green */
         font-family: 'Noto Sans Tamil', sans-serif;
     }
 
     /* Header Styling */
     h1, h2, h3 {
         font-family: 'Arima Madurai', cursive !important;
-        color: #2E7D32 !important; /* Paddy Green */
+        color: #15803D !important; /* Calm Dark Green */
     }
 
     /* Primary Buttons */
     .stButton>button {
-        background-color: #BF360C !important; /* Terracotta Red */
+        background-color: #22C55E !important; /* Soft Green */
         color: white !important;
         border-radius: 20px;
         border: none;
         padding: 10px 24px;
         font-weight: bold;
+        transition: all 0.3s;
     }
     
     .stButton>button:hover {
-        background-color: #FFC107 !important; /* Turmeric Gold */
-        color: #2E7D32 !important;
+        background-color: #16A34A !important; /* Darker Soft Green */
+        color: white !important;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
     }
 
     /* Outline Button fix for Forms */
     .stFormSubmitButton>button {
-        background-color: #BF360C !important;
+        background-color: #22C55E !important;
         color: white !important;
         border: none !important;
     }
@@ -72,12 +74,12 @@ st.markdown("""
     .stTabs [data-baseweb="tab"] {
         background-color: #FFFFFF;
         border-radius: 15px 15px 0 0;
-        color: #2E7D32;
+        color: #15803D;
         font-weight: bold;
     }
     .stTabs [aria-selected="true"] {
-        background-color: #E8F5E9;
-        border-bottom: 3px solid #BF360C;
+        background-color: #DCFCE7;
+        border-bottom: 3px solid #22C55E;
     }
 
     /* Custom Card Style (Use with st.markdown) */
