@@ -14,7 +14,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./database/init_postgis.sql:/docker-entrypoint-initdb.d/init_postgis.sql
+      - ./legacy_archive/database/init_postgis.sql:/docker-entrypoint-initdb.d/init_postgis.sql
 
   # 2. FastAPI ML Backend (Brain)
   ml_backend:

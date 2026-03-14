@@ -27,7 +27,7 @@ def predict_yield(request: DistrictRequest):
     """
     try:
         # Check cache for recent NDVI/EVI
-        from .database import get_cached_indices, set_cached_indices
+        from database import get_cached_indices, set_cached_indices
         indices = get_cached_indices(request.lat, request.lon)
         
         # In a full flow we would query our RF Model
