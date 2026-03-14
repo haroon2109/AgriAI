@@ -1,10 +1,10 @@
-FROM node:18-slim
+FROM node:18
 
 WORKDIR /app
 
-# Install production dependencies
+# Install dependencies
 COPY package*.json ./
-RUN npm install --only=production
+RUN npm install
 
 # Copy source code
 COPY . .
@@ -13,4 +13,4 @@ COPY . .
 EXPOSE 5000
 
 # Start server
-CMD ["node", "src/index.js"]
+CMD ["npm", "start"]
