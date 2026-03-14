@@ -1,10 +1,13 @@
+streamlit
+streamlit-mic-recorder
+fpdf
+Pillow
+pandas
+plotly
+numpy
+streamlit-folium
+folium
 fastapi
 uvicorn
 pydantic
-requests
-pandas
-# Future ML dependencies
-# torch
-# scikit-learn
-# geopandas
-# pystac-client
+python-multipart
